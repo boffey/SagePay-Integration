@@ -7,11 +7,11 @@ namespace Academe\SagePay\Psr7\Request;
  * See https://test.sagepay.com/documentation/#transactions
  */
 
-use UnexpectedValueException;
-use Academe\SagePay\Psr7\Model\Endpoint;
 use Academe\SagePay\Psr7\Model\Auth;
-use Academe\SagePay\Psr7\PaymentMethod\PaymentMethodInterface;
+use Academe\SagePay\Psr7\Model\Endpoint;
 use Academe\SagePay\Psr7\Money\AmountInterface;
+use Academe\SagePay\Psr7\PaymentMethod\PaymentMethodInterface;
+use UnexpectedValueException;
 
 class CreatePayment extends AbstractRequest
 {
@@ -35,6 +35,8 @@ class CreatePayment extends AbstractRequest
     protected $shippingAddress;
     protected $shippingRecipient;
     protected $referrerId = '3F7A4119-8671-464F-A091-9E59EB47B80C';
+    protected $credentialType;
+    protected $strongCustomerAuthentication;
 
     /**
      * @var string The prefix is added to the name fields of the customer.
@@ -324,6 +326,30 @@ class CreatePayment extends AbstractRequest
         return $copy->setReferrerId($referrerId);
     }
 
+    public function setCredentialType($credentialType)
+    {
+        $this->credentialType = $credentialType;
+        return $this;
+    }
+
+    public function withCredentialType($credentialType)
+    {
+        $copy = clone $this;
+        return $copy->setCredentialType($credentialType);
+    }
+
+    public function setStrongCustomerAuthentication($strongCustomerAuthentication)
+    {
+        $this->strongCustomerAuthentication = $strongCustomerAuthentication;
+        return $this;
+    }
+
+    public function withStrongCustomerAuthentication($strongCustomerAuthentication)
+    {
+        $copy = clone $this;
+        return $copy->setStrongCustomerAuthentication($strongCustomerAuthentication);
+    }
+
     /**
      * Get the message body data for serializing.
      * @return array
@@ -384,6 +410,14 @@ class CreatePayment extends AbstractRequest
 
         if (! empty($this->referrerId)) {
             $result['referrerId'] = $this->referrerId;
+        }
+
+        if (! empty($this->strongCustomerAuthentication)) {
+            $result['strongCustomerAuthentication'] = $this->strongCustomerAuthentication;
+        }
+
+        if (! empty($this->credentialType)) {
+            $result['credentialType'] = $this->credentialType;
         }
 
         return $result;

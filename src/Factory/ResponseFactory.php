@@ -10,11 +10,11 @@ namespace Academe\SagePay\Psr7\Factory;
  * application would otherwise have to deal with.
  */
 
-use Academe\SagePay\Psr7\Response\AbstractTransaction;
-use Academe\SagePay\Psr7\Request\AbstractRequest;
-use Psr\Http\Message\ResponseInterface;
-use Academe\SagePay\Psr7\Response;
 use Academe\SagePay\Psr7\Helper;
+use Academe\SagePay\Psr7\Request\AbstractRequest;
+use Academe\SagePay\Psr7\Response;
+use Academe\SagePay\Psr7\Response\AbstractTransaction;
+use Psr\Http\Message\ResponseInterface;
 use Teapot\StatusCode\Http;
 
 class ResponseFactory
@@ -99,7 +99,7 @@ class ResponseFactory
         // A 3D Secure redirect.
         // Like Secure3D, this one does not have a TransactionType, though shares many fields
         // with the abstract transaction response.
-        if (Helper::dataGet($data, 'statusCode') == '2007') {
+        if (Helper::dataGet($data, 'statusCode') == '2007' || Helper::dataGet($data, 'statusCode') == '2021') {
             if (Helper::dataGet($data, 'status') == AbstractTransaction::STATUS_3DAUTH) {
                 return Response\Secure3DRedirect::fromData($data, $httpCode);
             }

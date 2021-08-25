@@ -15,6 +15,8 @@ use Academe\SagePay\Psr7\ServerRequest\Secure3DAcs;
 
 class CreateSecure3D extends AbstractRequest
 {
+    protected $cRes;
+    protected $threeDSSessionData;
     protected $paRes;
     protected $transactionId;
 
@@ -32,7 +34,13 @@ class CreateSecure3D extends AbstractRequest
         $this->setAuth($auth);
 
         if ($paRes instanceof Secure3DAcs) {
-            $this->paRes = $paRes->getPaRes();
+            if (!empty($paRes->getCRes())) {
+                $this->resource_path = ['transactions', '{transactionId}', '3d-secure-challenge'];
+                $this->cRes = $paRes->getCRes();
+                $this->threeDSSessionData = $paRes->getThreeDSSessionData();
+            } else {
+                $this->paRes = $paRes->getPaRes();
+            }
         } else {
             $this->paRes = $paRes;
         }
@@ -46,6 +54,13 @@ class CreateSecure3D extends AbstractRequest
      */
     public function jsonSerialize()
     {
+        if (!empty($this->cRes)) {
+            return [
+                'cRes' => $this->getCRes(),
+                'threeDSSessionData' => $this->getThreeDSSessionData(),
+            ];
+        }
+
         return [
             'paRes' => $this->getPaRes(),
         ];
@@ -57,6 +72,19 @@ class CreateSecure3D extends AbstractRequest
     public function getPaRes()
     {
         return $this->paRes;
+    }
+
+    /**
+     * @return Secure3DAcsResponse|string
+     */
+    public function getCRes()
+    {
+        return $this->cRes;
+    }
+
+    public function getThreeDSSessionData()
+    {
+        return $this->threeDSSessionData;
     }
 
     /**

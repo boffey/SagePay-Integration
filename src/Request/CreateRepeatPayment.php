@@ -8,12 +8,12 @@
  * authorisation or a payment.
  */
 
-use UnexpectedValueException;
-use Academe\SagePay\Psr7\Model\Endpoint;
-use Academe\SagePay\Psr7\Model\Auth;
-use Academe\SagePay\Psr7\Money\AmountInterface;
 use Academe\SagePay\Psr7\Model\AddressInterface;
+use Academe\SagePay\Psr7\Model\Auth;
+use Academe\SagePay\Psr7\Model\Endpoint;
 use Academe\SagePay\Psr7\Model\PersonInterface;
+use Academe\SagePay\Psr7\Money\AmountInterface;
+use UnexpectedValueException;
 
 class CreateRepeatPayment extends AbstractRequest
 {
@@ -29,6 +29,8 @@ class CreateRepeatPayment extends AbstractRequest
     // Optional or overridable data.
     protected $shippingAddress;
     protected $shippingRecipient;
+    protected $credentialType;
+    protected $threeDSRequestorPriorAuthenticationInfo;
 
     /**
      * @var string The prefix is added to the name fields when sending to Sage Pay
@@ -181,6 +183,30 @@ class CreateRepeatPayment extends AbstractRequest
         return $copy->setGiftAid($giftAid);
     }
 
+    public function setCredentialType($credentialType)
+    {
+        $this->credentialType = $credentialType;
+        return $this;
+    }
+
+    public function withCredentialType($credentialType)
+    {
+        $copy = clone $this;
+        return $copy->setCredentialType($credentialType);
+    }
+
+    public function setThreeDSRequestorPriorAuthenticationInfo($threeDSRequestorPriorAuthenticationInfo)
+    {
+        $this->threeDSRequestorPriorAuthenticationInfo = $threeDSRequestorPriorAuthenticationInfo;
+        return $this;
+    }
+
+    public function withThreeDSRequestorPriorAuthenticationInfo($threeDSRequestorPriorAuthenticationInfo)
+    {
+        $copy = clone $this;
+        return $copy->setThreeDSRequestorPriorAuthenticationInfo($threeDSRequestorPriorAuthenticationInfo);
+    }
+
     /**
      * Get the message body data for serializing.
      * @return array
@@ -215,6 +241,14 @@ class CreateRepeatPayment extends AbstractRequest
 
         if (! empty($this->giftAid)) {
             $result['giftAid'] = $this->giftAid;
+        }
+
+        if (! empty($this->credentialType)) {
+            $result['credentialType'] = $this->credentialType;
+        }
+
+        if (! empty($this->threeDSRequestorPriorAuthenticationInfo)) {
+            $result['threeDSRequestorPriorAuthenticationInfo'] = $this->threeDSRequestorPriorAuthenticationInfo;
         }
 
         return $result;

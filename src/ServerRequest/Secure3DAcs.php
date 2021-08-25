@@ -13,6 +13,8 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class Secure3DAcs extends AbstractServerRequest
 {
+    protected $cRes;
+    protected $threeDSSessionData;
     protected $PaRes;
     protected $MD;
 
@@ -32,6 +34,8 @@ class Secure3DAcs extends AbstractServerRequest
      */
     protected function setData($data)
     {
+        $this->cRes = Helper::dataGet($data, 'cres', null);
+        $this->threeDSSessionData = Helper::dataGet($data, 'threeDSSessionData', null);
         $this->PaRes = Helper::dataGet($data, 'PaRes', null);
         $this->MD = Helper::dataGet($data, 'MD', null);
         return $this;
@@ -44,6 +48,8 @@ class Secure3DAcs extends AbstractServerRequest
     public function jsonSerialize()
     {
         return [
+            'cRes' => $this->getCRes(),
+            'threeDSSessionData' => $this->getThreeDSSessionData(),
             'PaRes' => $this->getPaRes(),
             'MD' => $this->getMD(),
         ];
@@ -66,11 +72,28 @@ class Secure3DAcs extends AbstractServerRequest
     }
 
     /**
+     * @return string The encrypted 3DSecure result (cRes) to pass on to Sage Pay for validation.
+     */
+    public function getCRes()
+    {
+        return $this->cRes;
+    }
+
+    public function getThreeDSSessionData()
+    {
+        return $this->threeDSSessionData;
+    }
+
+    /**
      * Determine if this message is a valid 3D Secure ACS server request.
      * @return boolean
      */
     public function isValid()
     {
+        if (!empty($this->getCRes())) {
+            return true;
+        }
+
         // If paRes is set, then this is [likely to be] the user returning from
         // the bank's 3D Secure password entry.
         return ! empty($this->getPaRes());
@@ -84,6 +107,10 @@ class Secure3DAcs extends AbstractServerRequest
      */
     public static function isRequest($data)
     {
+        if (!empty(Helper::dataGet($data, 'cres'))) {
+            return true;
+        }
+
         return ! empty(Helper::dataGet($data, 'PaRes'));
     }
 }
