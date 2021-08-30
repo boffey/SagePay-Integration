@@ -32,6 +32,8 @@ abstract class AbstractTransaction extends AbstractResponse
     protected $statusDetail;
 
     protected $transactionId;
+    protected $acsTransId;
+    protected $dsTranId;
     protected $transactionType;
 
     protected $retrievalReference;
