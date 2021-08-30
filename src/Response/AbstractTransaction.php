@@ -6,10 +6,10 @@ namespace Academe\SagePay\Psr7\Response;
  * Shared transaction response abstract.
  */
 
-use Academe\SagePay\Psr7\Money\CurrencyInterface;
-use Academe\SagePay\Psr7\Money\Currency;
-use Academe\SagePay\Psr7\Money\Amount;
 use Academe\SagePay\Psr7\Helper;
+use Academe\SagePay\Psr7\Money\Amount;
+use Academe\SagePay\Psr7\Money\Currency;
+use Academe\SagePay\Psr7\Money\CurrencyInterface;
 
 abstract class AbstractTransaction extends AbstractResponse
 {
@@ -55,6 +55,8 @@ abstract class AbstractTransaction extends AbstractResponse
         // for valid class, method and variable names.
 
         $this->transactionId = Helper::dataGet($data, 'transactionId', null);
+        $this->acsTransId = Helper::dataGet($data, 'acsTransId', null);
+        $this->dsTranId = Helper::dataGet($data, 'dsTranId', null);
         $this->transactionType = Helper::dataGet($data, 'transactionType', null);
 
         $this->retrievalReference = Helper::dataGet($data, 'retrievalReference', null);
@@ -156,6 +158,16 @@ abstract class AbstractTransaction extends AbstractResponse
     public function getTransactionId()
     {
         return $this->transactionId;
+    }
+
+    public function getAcsTransId()
+    {
+        return $this->acsTransId;
+    }
+
+    public function getDsTranId()
+    {
+        return $this->dsTranId;
     }
 
     /**
@@ -313,6 +325,14 @@ abstract class AbstractTransaction extends AbstractResponse
 
         if ($currency = $this->getCurrency()) {
             $return['currency'] = $currency->getCode();
+        }
+
+        if ($acsTransId = $this->getAcsTransId()) {
+            $return['acsTransId'] = $acsTransId;
+        }
+
+        if ($dsTranId = $this->getDsTranId()) {
+            $return['dsTranId'] = $dsTranId;
         }
 
         return $return;
