@@ -92,8 +92,10 @@ class ResponseFactory
         $secure3dStatusList = Response\Secure3D::constantList('STATUS3D');
         $status = Helper::dataGet($data, 'status');
 
-        if ($status && in_array($status, $secure3dStatusList) && ! Helper::dataGet($data, 'transactionId')) {
-            return Response\Secure3D::fromData($data, $httpCode);
+        if ($status && in_array($status, $secure3dStatusList)) {
+            if (in_array($status, [Response\Secure3D::STATUS3D_NOTAUTHED, Response\Secure3D::STATUS3D_INVALID]) || !Helper::dataGet($data, 'transactionId')) {
+                return Response\Secure3D::fromData($data, $httpCode);
+            }
         }
 
         // A 3D Secure redirect.

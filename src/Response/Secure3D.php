@@ -1,4 +1,6 @@
-<?php namespace Academe\SagePay\Psr7\Response;
+<?php
+
+namespace Academe\SagePay\Psr7\Response;
 
 /**
  * The 3D Secure response embedded within a Sage Pay transaction
@@ -15,15 +17,17 @@ class Secure3D extends AbstractResponse
     /**
      * List of statuses that the 3DSecure object can return.
      */
-    const STATUS3D_AUTHENTICATED        = 'Authenticated';
-    const STATUS3D_NOTCHECKED           = 'NotChecked';
-    const STATUS3D_NOTAUTHENTICATED     = 'NotAuthenticated';
-    const STATUS3D_ERROR                = 'Error';
-    const STATUS3D_CARDNOTENROLLED      = 'CardNotEnrolled';
-    const STATUS3D_ISSUERNOTENROLLED    = 'IssuerNotEnrolled';
-    const STATUS3D_MALFORMEDORINVALID   = 'MalformedOrInvalid';
-    const STATUS3D_ATTEMPTONLY          = 'AttemptOnly';
-    const STATUS3D_INCOMPLETE           = 'Incomplete';
+    public const STATUS3D_AUTHENTICATED        = 'Authenticated';
+    public const STATUS3D_NOTCHECKED           = 'NotChecked';
+    public const STATUS3D_NOTAUTHENTICATED     = 'NotAuthenticated';
+    public const STATUS3D_NOTAUTHED            = 'NotAuthed';
+    public const STATUS3D_ERROR                = 'Error';
+    public const STATUS3D_CARDNOTENROLLED      = 'CardNotEnrolled';
+    public const STATUS3D_ISSUERNOTENROLLED    = 'IssuerNotEnrolled';
+    public const STATUS3D_MALFORMEDORINVALID   = 'MalformedOrInvalid';
+    public const STATUS3D_INVALID              = 'Invalid';
+    public const STATUS3D_ATTEMPTONLY          = 'AttemptOnly';
+    public const STATUS3D_INCOMPLETE           = 'Incomplete';
 
     /**
      * The 3D Secure status.
